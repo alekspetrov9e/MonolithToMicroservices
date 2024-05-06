@@ -18,22 +18,47 @@ public class DiscussionService {
 
     public void createDiscussion(String username, Long token, String topic) {
         // TODO Part 3: Implement Discussion Service
-        throw new UnsupportedOperationException("Not Implemented");
+        if (!authenticationService.isAuthenticated(username, token)) {
+            return;
+        }
+        Discussion discussion = new Discussion(topic);
+        discussions.add(discussion);
     }
 
     public void addComment(String username, Long token, String topic, String comment) {
         // TODO Part 3: Implement Discussion Service
-        throw new UnsupportedOperationException("Not Implemented");
+        if (!authenticationService.isAuthenticated(username, token)) {
+            return;
+        }
+        var optionalDiscussion = discussions.stream().filter(discussion ->
+                discussion.getTopic().equals(topic)).findFirst();
+        if (optionalDiscussion.isEmpty()) {
+            return;
+        }
+        Discussion discussion = optionalDiscussion.get();
+        discussion.addComment(username, comment);
     }
 
     public List<Map.Entry<String, String>> getComments(String topic) {
         // TODO Part 3: Implement Discussion Service
-        throw new UnsupportedOperationException("Not Implemented");
+        var optionalDiscussion = discussions.stream().filter(discussion ->
+                discussion.getTopic().equals(topic)).findFirst();
+        if (optionalDiscussion.isEmpty()) {
+            return null;
+        }
+        Discussion discussion = optionalDiscussion.get();
+        return discussion.getComments();
     }
 
     public List<String> getCommentsByUser(String topic, String username) {
         // TODO Part 3: Implement Discussion Service
-        throw new UnsupportedOperationException("Not Implemented");
+        var optionalDiscussion = discussions.stream().filter(discussion ->
+                discussion.getTopic().equals(topic)).findFirst();
+        if (optionalDiscussion.isEmpty()) {
+            return null;
+        }
+        Discussion discussion = optionalDiscussion.get();
+        return discussion.getCommentsByUser(username);
     }
 
     public void deleteUserComments(String username) {

@@ -20,7 +20,17 @@ public class AuthenticationService {
 
     public Long authenticateUser(String username, String password) {
         // TODO Part 2: Implement Authentication Service
-        throw new UnsupportedOperationException("Not Implemented");
+
+        User user = userService.getUser(username);
+        if (user == null) {
+            return -1L;
+        }
+        if (!user.getPassword().equals(password)) {
+            return -1L;
+        }
+        Long token = Math.abs(this.random.nextLong());
+        userTokens.put(username, token);
+        return token;
     }
 
     public boolean isAuthenticated(String username, Long token) {

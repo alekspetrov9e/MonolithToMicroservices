@@ -22,12 +22,21 @@ public class UserService {
 
     public void registerUser(String username, String password) {
         // TODO Part 1: Implement User Service
-        throw new UnsupportedOperationException("Not Implemented");
+        if (!users.stream().filter(user -> user.getUsername().equals(username)).findFirst().isEmpty()) {
+            return;
+        }
+        User user = new User(username, password);
+        users.add(user);
     }
 
     public void deleteUser(String username, Long token) {
         // TODO Part 1: Implement User Service
-        throw new UnsupportedOperationException("Not Implemented");
+        if (!authenticationService.isAuthenticated(username, token)) {
+            return;
+        }
+        discussionService.deleteUserComments(username);
+        users.removeIf(user -> user.getUsername().equals(username));
+        authenticationService.deauthenticateUser(username);
     }
 
     public User getUser(String username) {
